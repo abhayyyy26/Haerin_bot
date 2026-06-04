@@ -2,7 +2,6 @@ const { Telegraf } = require('telegraf');
 
 // 1. Apna asli Token yahan dalo
 const bot = new Telegraf(process.env.BOT_TOKEN);
-const bot = new Telegraf(TOKEN);
 const OWNER_ID = 6030859750;
 // ==========================================
 // 🚀 BOT START & BASIC COMMANDS
