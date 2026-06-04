@@ -515,15 +515,15 @@ process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
 
 
-// --- Server for UptimeRobot ---
+// Server for UptimeRobot
 const express = require('express');
 const app = express();
+const PORT = process.env.PORT || 3000; // Render is port ko automatically assign karega
 
 app.get('/', (req, res) => {
     res.send('Queen Bot is Active!');
 });
 
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
