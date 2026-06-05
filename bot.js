@@ -1,5 +1,5 @@
 const { Telegraf } = require('telegraf');
-const { GoogleGenAI } = require("@google/generative-ai"); // Fixed initialization syntax ke liye
+const { GoogleGenerativeAI } = require("@google/generative-ai"); // ✅ FIXED: Sahi class ka naam GoogleGenerativeAI hai
 const express = require('express');
 
 // ==========================================
@@ -21,10 +21,10 @@ app.listen(PORT, () => {
 // ==========================================
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-// ✅ PROBLEM 1 FIXED: Gemini initialization ab naye object format me hai
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// ✅ FIXED: Sahi constructor use karke initialize kiya hai
+const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// ✅ PROBLEM 2 FIXED: Array ka naam fix kar diya taaki neeche code crash na ho
+// ✅ VIP Users list
 const VIP_USERS = [6030859750, 6918855293];
 
 // ==========================================
@@ -213,7 +213,7 @@ bot.on('text', async (ctx) => {
     if (/\b(group dead|sannata|boring|koi hai|koi zinda hai)\b/i.test(text)) {
         await typeEffect(ctx, 2000);
         const deadReplies = [
-            `Mere aane se pehle toh sab bohot बोलता the, ab meri khubsurti dekh kar sabke hosh udd gaye kya? 💅✨`,
+            `Mere aane se pehle toh sab bohot bolte the, ab meri khubsurti dekh kar sabke hosh udd gaye kya? 💅✨`,
             `Tum log itne boring ho, isliye sab offline chale gaye. 😂 Kuch dhang ka topic laao!`,
             `Main yahan hu na! Par meri aukaat wale log milte hi nahi baat karne ke liye... 🙄👑`
         ];
@@ -289,7 +289,7 @@ bot.on('text', async (ctx) => {
             }
         }
 
-        return; // Chup raho agar koi mention nahi hai
+        return;
     }
 
     // ==========================================
@@ -299,6 +299,8 @@ bot.on('text', async (ctx) => {
 
     // 🔥 VIP OWNER LOGIC
     if (isOwner && isBotMentioned) {
+
+        // 1. Shut up Logic
         if (/\b(chup|shut up|bakwas band|shant)\b/i.test(text)) {
             await typeEffect(ctx, 1500);
             const silentReplies = [
@@ -311,6 +313,7 @@ bot.on('text', async (ctx) => {
             return ctx.reply(silentReplies[Math.floor(Math.random() * silentReplies.length)]);
         }
 
+        // 2. Hi/Hello Logic
         if (/\b(hi|hello|hey|oye)\b/i.test(text)) {
             await typeEffect(ctx, 1500);
             const helloReplies = [
@@ -324,6 +327,7 @@ bot.on('text', async (ctx) => {
             return ctx.reply(helloReplies[Math.floor(Math.random() * helloReplies.length)]);
         }
 
+        // 3. Praise/Tareef Logic
         if (/\b(cute|sundar|smart|best|achhi|pyari)\b/i.test(text)) {
             await typeEffect(ctx, 1500);
             const praiseReplies = [
@@ -336,6 +340,7 @@ bot.on('text', async (ctx) => {
             return ctx.reply(praiseReplies[Math.floor(Math.random() * praiseReplies.length)]);
         }
 
+        // 4. Report Logic
         if (text.includes('report') && ctx.message.reply_to_message) {
             const targetUser = ctx.message.reply_to_message.from.first_name;
             const targetUsername = ctx.message.reply_to_message.from.username || targetUser;
@@ -458,7 +463,7 @@ bot.on('text', async (ctx) => {
     try {
         await typeEffect(ctx, 2000);
 
-        // Fixed loading logic to matching modern SDK method
+        // ✅ FIXED: Ekdum stable and standard methods use ho raha hai naye SDK ke hisab se
         const model = ai.getGenerativeModel({ model: "gemini-pro" });
 
         const prompt = `Tumhara naam Savage Queen hai. Tum ek Telegram bot ho jo bohot cool, thodi nakchadi, nakhreli aur mazaedaar tareeke se dosto ki tarah baat karti hai. Is message ka Hinglish (Hindi + English) mein ek natural, thoda nakhre wala aur chatpata reply do (maximum 2-3 lines): ${ctx.message.text}`;
