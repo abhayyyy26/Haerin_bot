@@ -1,5 +1,5 @@
 const { Telegraf } = require('telegraf');
-const { GoogleGenerativeAI } = require("@google/generative-ai"); // ✅ FIXED: Sahi class ka naam GoogleGenerativeAI hai
+const { GoogleGenAI } = require("@google/genai"); // Naya standard package // ✅ FIXED: Sahi class ka naam GoogleGenerativeAI hai
 const express = require('express');
 
 // ==========================================
@@ -22,7 +22,7 @@ app.listen(PORT, () => {
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 // ✅ FIXED: Sahi constructor use karke initialize kiya hai
-const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // ✅ VIP Users list
 const VIP_USERS = [6030859750, 6918855293];
@@ -460,22 +460,24 @@ bot.on('text', async (ctx) => {
     // ==========================================
     // 🧠 NESTED GEMINI AI LOGIC (Jab kuch bhi match na ho!)
     // ==========================================
+    // ==========================================
+    // 🧠 NESTED GEMINI AI LOGIC (Jab kuch bhi match na ho!)
+    // ==========================================
     try {
         await typeEffect(ctx, 2000);
 
-        // 👑 Aur iski jagah ye naye model ka naam daal do:
-        const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
-
+        // ✅ Naye stable SDK ka direct format:
         const prompt = `Tumhara naam Aashu hai. Tum ek Telegram bot ho jo bohot cool, thodi nakchadi, nakhreli aur mazaedaar tareeke se dosto ki tarah baat karti hai. Is message ka Hinglish (Hindi + English) mein ek natural, thoda nakhre wala aur chatpata reply do (maximum 2-3 lines): ${ctx.message.text}`;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const replyText = response.text();
+        const response = await ai.models.generateContent({
+            model: 'gemini-1.5-flash',
+            contents: prompt,
+        });
 
-        await ctx.reply(replyText);
+        await ctx.reply(response.text);
 
     } catch (error) {
-        console.error("AI Generation Error:", error);
+        console.error("AI Generation Error Details:", error.message || error);
         await ctx.reply("Yaar mera dimaag thoda ghum gaya hai, thodi der baad baat karte hain! 💅");
     }
 });
