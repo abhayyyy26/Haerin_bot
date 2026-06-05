@@ -1,5 +1,5 @@
 {
-  "name": "haerin_bot",
+  "name": "savage-queen-bot",
   "version": "1.0.0",
   "main": "bot.js",
   "scripts": {
@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "telegraf": "4.15.0",
-    "express": "4.18.2"
+    "express": "4.18.2",
+    "@google/generative-ai": "^0.1.0"
   }
 }

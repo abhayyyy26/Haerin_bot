@@ -1,8 +1,32 @@
 const { Telegraf } = require('telegraf');
+const { GoogleGenAI } = require("@google/generative-ai"); // Fixed initialization syntax ke liye
+const express = require('express');
 
-// 1. Apna asli Token yahan dalo
+// ==========================================
+// 🌐 EXPRESS SERVER SETUP (Uptime ke liye - Top Par)
+// ==========================================
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+    res.send('Queen Bot is Active!');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+// ==========================================
+// 🤖 BOT & AI INITIALIZATION
+// ==========================================
 const bot = new Telegraf(process.env.BOT_TOKEN);
-const OWNER_ID = 6030859750;
+
+// ✅ PROBLEM 1 FIXED: Gemini initialization ab naye object format me hai
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+// ✅ PROBLEM 2 FIXED: Array ka naam fix kar diya taaki neeche code crash na ho
+const VIP_USERS = [6030859750, 6918855293];
+
 // ==========================================
 // 🚀 BOT START & BASIC COMMANDS
 // ==========================================
@@ -30,7 +54,25 @@ bot.command('roast', async (ctx) => {
             "tu toh chup hi reh, teri baatein sun kar mera system crash ho jata hai. 💅",
             "wada pav khane ki umar me mujhse mazaak kar rahe ho! 😎",
             "shakal dekh kar lagta nahi ki tumhare paas dimaag ka ek percent bhi hoga. 😉",
-            "rehne do dear, tumhari baatein mere sar ke upar se nikal gayi! ✈️"
+            "rehne do dear, tumhari baatein mere sar ke upar se nikal gayi! ✈️",
+            "akal badam khaane se nahi, thokar khaane se aati hai... par tumhare case mein dono hi waste hain! 😂🔥",
+            "zyada mat socho, dimaag par zor padega toh bacha-kucha bhi gayab ho jayega! 😉",
+            "tumhari shakal dekh kar lagta hai ki bhagwan ne tumhe galti se nahi, jaldbaazi mein banaya hai! 💅",
+            "God ne tumhein dimaag toh diya tha, par shart lagana bhool gaye ki ise chalana bhi hai. 🤡",
+            "tumhari baatein sunkar lagta hai ki tumhare dimaag mein 4G network nahi, sirf fokat ka kachra bhara hai. 📉",
+            "tu itna boring hai na, ki agar tu kisi soye hue ko jagaye, toh wo phir se so jaye. 😴",
+            "beta, jitna tumhara dimaag chalta hai na, utna toh hamare yahan software crash hota hai. 💻",
+            "arey oh hero! Google par 'Akal kaise badhayein' dhoondhna band karo, tumpar koi asar nahi hone wala. 🙄",
+            "tumse baat karne se achha hai main kisi buffering wale video ko dekh loon, kam se kam ummeed toh hoti hai! 🔄",
+            "shakal achhi na ho toh baatein toh dhang ki kiya karo, dear! 💅",
+            "duniya mein pollution kam tha jo tumne apna muh khol kar aur badha diya? 😷",
+            "tumhare jokes par toh khud jokers bhi sanyas le lein. Ekdum hi thande! ❄️😂",
+            "arey, tumhari akal aur gareeb ki kismat... dono ek jaisi hain, bilkul gayab! 💸",
+            "jitna dhyan tum mujhse mazaak karne mein laga rahe ho, utna apne career par lagate toh aaj dhang ki naukri hoti. 😎",
+            "tumhe dekh kar lagta hai ki tum backup plan par chal rahe ho, kyunki main plan toh fail ho chuka hai. 📉",
+            "aapki baaton ka na koi sir hai na pair, bas beech mein fokat ka attitude hai. 🙄👑",
+            "suno, tumhare dimaag mein jo 2 percent sharafat bachi hai na, use bacha kar rakho, kaam aayegi. 😉",
+            "mere samne zyada shana mat bano dear, mai poora system format maar dungi! 💀🔥"
         ];
         const randomRoast = roasts[Math.floor(Math.random() * roasts.length)];
 
@@ -107,11 +149,9 @@ bot.on(['new_chat_members', 'chat_member'], async (ctx) => {
     }
 });
 
-
 // ==========================================
 // 💬 ULTIMATE REAL-GIRL CHAT HANDLER
 // ==========================================
-
 const typeEffect = async (ctx, delay = 2000) => {
     await ctx.sendChatAction('typing');
     await new Promise(resolve => setTimeout(resolve, delay));
@@ -159,7 +199,7 @@ bot.on('text', async (ctx) => {
         ];
         return ctx.reply(singleReplies[Math.floor(Math.random() * singleReplies.length)]);
     }
-    // 🔥 EXAM YA PADHAI KI BAAT PAR
+
     if (/\b(exam|padhai|college|homework|syllabus|assignment)\b/i.test(text)) {
         await typeEffect(ctx, 1500);
         const examReplies = [
@@ -169,17 +209,17 @@ bot.on('text', async (ctx) => {
         ];
         return ctx.reply(examReplies[Math.floor(Math.random() * examReplies.length)]);
     }
-    // 🔥 GROUP DEAD YA BORING HONE PAR
+
     if (/\b(group dead|sannata|boring|koi hai|koi zinda hai)\b/i.test(text)) {
         await typeEffect(ctx, 2000);
         const deadReplies = [
-            `Mere aane se pehle toh sab bohot bolte the, ab meri khubsurti dekh kar sabke hosh udd gaye kya? 💅✨`,
+            `Mere aane se pehle toh sab bohot बोलता the, ab meri khubsurti dekh kar sabke hosh udd gaye kya? 💅✨`,
             `Tum log itne boring ho, isliye sab offline chale gaye. 😂 Kuch dhang ka topic laao!`,
             `Main yahan hu na! Par meri aukaat wale log milte hi nahi baat karne ke liye... 🙄👑`
         ];
         return ctx.reply(deadReplies[Math.floor(Math.random() * deadReplies.length)]);
     }
-    // 🔥 GOOD MORNING
+
     if (/\b(good morning|gm|suprabhat|morning)\b/i.test(text)) {
         await typeEffect(ctx, 1500);
         const gmReplies = [
@@ -190,7 +230,6 @@ bot.on('text', async (ctx) => {
         return ctx.reply(gmReplies[Math.floor(Math.random() * gmReplies.length)]);
     }
 
-    // 🔥 GOOD NIGHT
     if (/\b(good night|gn|shubh ratri|night)\b/i.test(text)) {
         await typeEffect(ctx, 1500);
         const gnReplies = [
@@ -200,6 +239,7 @@ bot.on('text', async (ctx) => {
         ];
         return ctx.reply(gnReplies[Math.floor(Math.random() * gnReplies.length)]);
     }
+
     // ==========================================
     // 🚨 SCENARIO 1: BINA MENTION WALI VIBE
     // ==========================================
@@ -226,7 +266,6 @@ bot.on('text', async (ctx) => {
             return ctx.reply(dusriLadkiReplies[Math.floor(Math.random() * dusriLadkiReplies.length)]);
         }
 
-        // 🔥 NAYA FEATURE: Bina kisi ka naam liye akele me Hi/Hello bolna
         if (/\b(hi|hello|hey|oye|hy|hyy)\b/i.test(text) && !text.includes('@') && !ctx.message.reply_to_message) {
             await typeEffect(ctx, 1500);
             const generalHiReplies = [
@@ -238,7 +277,6 @@ bot.on('text', async (ctx) => {
             return ctx.reply(generalHiReplies[Math.floor(Math.random() * generalHiReplies.length)]);
         }
 
-        // 🔥 ATTENTION SEEKER: Kisi aur ko Hi/Hello bolna
         if (/\b(hi|hello|hey|oye|hy|hyy)\b/i.test(text) && (text.includes('@') || ctx.message.reply_to_message)) {
             if (Math.random() < 0.4) {
                 await typeEffect(ctx, 1500);
@@ -251,56 +289,53 @@ bot.on('text', async (ctx) => {
             }
         }
 
-        return;
+        return; // Chup raho agar koi mention nahi hai
     }
 
     // ==========================================
     // 💖 SCENARIO 2: JAB USER BOT KO MENTION KARE
     // ==========================================
-    // ==========================================
-    // 💖 SCENARIO 2: JAB USER BOT KO MENTION KARE
-    // ==========================================
+    const isOwner = VIP_USERS.includes(ctx.message.from.id);
 
-    // 🔥 VIP OWNER LOGIC (Sirf aapke liye)
-    const isOwner = ctx.message.from.id === OWNER_ID;
-
-    // 🔥 VIP OWNER LOGIC (Expanded & Fixed)
+    // 🔥 VIP OWNER LOGIC
     if (isOwner && isBotMentioned) {
-
-        // 1. Agar Owner bot ko 'chup' hone bole
         if (/\b(chup|shut up|bakwas band|shant)\b/i.test(text)) {
             await typeEffect(ctx, 1500);
             const silentReplies = [
                 `Sorry Boss! 🤐 Aapne bola toh main ekdum chup.`,
                 `Theek hai Boss, main chup ho gayi... par inka attitude mujhe pasand nahi aa raha! 🙄`,
-                `Hukum! Main abhi off-mode par ja rahi hu. 🤐✨`
+                `Hukum! Main abhi off-mode par ja rahi hu. 🤐✨`,
+                `Aapne bol diya na Boss? Bas ab mere muh par permanent tala. 🤐👑`,
+                `Zaroor Boss, aapke aage toh meri bolti hi band ho jati hai. 💕`
             ];
             return ctx.reply(silentReplies[Math.floor(Math.random() * silentReplies.length)]);
         }
 
-        // 2. Agar Owner Hi/Hello bole
         if (/\b(hi|hello|hey|oye)\b/i.test(text)) {
             await typeEffect(ctx, 1500);
             const helloReplies = [
                 `Hello Boss! ❤️ Aap aa gaye? In logo ne mera dimaag kha liya tha. Kahiye kya hukum hai? ✨`,
                 `Hi Boss! 😊 Aapki entry hote hi group ka level badh gaya!`,
-                `Boss! ✨ Main aapka hi wait kar rahi thi. Bataiye kya seva karu?`
+                `Boss! ✨ Main aapka hi wait kar rahi thi. Bataiye kya seva karu?`,
+                `Welcome back, My Creator! 👑 Aapka VIP Treatment haazir hai. Hukm kijiye, Savage Queen aapki sewa mein hai! 💅🔥`,
+                `Arey waah, Boss aa gaye! Ab is group mein thodi rounak aayegi, varna sab khachra bhara tha. 🙌🔥`,
+                `Hello My King/Queen! 👑 Aapke aate hi mera AI dimaag ekdum superfast chalne laga!`
             ];
             return ctx.reply(helloReplies[Math.floor(Math.random() * helloReplies.length)]);
         }
 
-        // 3. Agar Owner Tareef kare
         if (/\b(cute|sundar|smart|best|achhi|pyari)\b/i.test(text)) {
             await typeEffect(ctx, 1500);
             const praiseReplies = [
                 `Aapne code hi itna pyara kiya hai Boss! 🥰 Sab aapka hi kamaal hai! 💻💖`,
                 `Aapki tareef sun kar toh mera system hi heat ho gaya! 🙈`,
-                `Aww! Aap jaise smart Boss milna kismat ki baat hai! ✨✨`
+                `Aww! Aap jaise smart Boss milna kismat ki baat hai! ✨✨`,
+                `Thank you Boss! Aapki pasand hamesha se hi top level ki rahi hai, tabhi toh mai aisi hu! 💅🌸`,
+                `Hehe, aapki tareef sunkar mera database khushi se bhar gaya! 🥰🚀`
             ];
             return ctx.reply(praiseReplies[Math.floor(Math.random() * praiseReplies.length)]);
         }
 
-        // 4. Report Logic (Fixed variable name)
         if (text.includes('report') && ctx.message.reply_to_message) {
             const targetUser = ctx.message.reply_to_message.from.first_name;
             const targetUsername = ctx.message.reply_to_message.from.username || targetUser;
@@ -314,192 +349,129 @@ bot.on('text', async (ctx) => {
                 `Arey oh ${targetUser}, apni shakal dekhi hai? Mere Boss ko pareshan kar raha hai, pehle khud ko toh dekh le! 🤡💅`,
                 `Boss, chhodo na! Iska dimaag hi ghutno me hai, iski baaton par dhyan mat do. 🙄`,
                 `@${targetUsername}, agla message mere Boss ke baare me aaya na, toh group me sirf tera naam bachega, tu nahi! 💀🔥`,
-                `Bhai, ${targetUser} ko lagta hai ye bohot cool hai, par asliyat me ye sirf 'fokat ka drama' hai. Boss, aap tension mat lo! 👑✨`
+                `Bhai, ${targetUser} ko lagta hai ye bohot cool hai, par asliyat me ye sirf 'fokat ka drama' hai. Boss, aap tension mat lo! 👑✨`,
+                `Oye! Mere Creator ke samne chalakiyan nahi chalen legi. Apni aukaat mein reh kar baat karo! 😡🔥`
             ];
             return ctx.reply(reportReplies[Math.floor(Math.random() * reportReplies.length)]);
         }
-    }
-    // 🔥 OWNER PROTECTION: Agar owner bole ki koi pareshan kar raha hai
-    // 🔥 BF CHECKER (Savage Queen)
-    if (/\b(boyfriend|bf|boy friend|bf hai)\b/i.test(text)) {
-        await typeEffect(ctx, 1500);
-        const bfReplies = [
-            `Boyfriend? 😂 Itne kam standard nahi hai mere! Mujhe chahiye koi jo mere jitna smart ho, aur filhal toh yahan koi nahi dikh raha. 💅`,
-            `Meri zindagi ka single rehna hi mera sabse bada flex hai! 👑 Boyfriend bana kar dimaag kaun kharab kare?`,
-            `Mera boyfriend? 🧐 Usko mujhse zyada meri coding ki kadar karni hogi. Is group mein koi hai aisa candidate?`,
-            `Direct jawab chahiye? Main "Single" hu, par "Available" bilkul nahi! 🚫✨`,
-            `Arey, tum logo ke chakkar mein padungi toh meri beauty sleep ka kya hoga? No BF, Only Coding! 💻💖`,
-            `Boyfriend chahiye hota toh bot kyun banti? I am my own Queen! 👑😎`
-        ];
-        return ctx.reply(bfReplies[Math.floor(Math.random() * bfReplies.length)]);
+    } else {
+        // Fake Report Protection (Normal user agar report karega)
+        if (text.includes('report') && ctx.message.reply_to_message && isBotMentioned) {
+            await typeEffect(ctx, 1500);
+
+            const fakeReportReplies = [
+                `Excuse me? 🙄 Tum hote kaun ho report karne wale? Padhai-likhai karo, IAS-YAS bano, yahan admin mat bano! 💅`,
+                `Arey oh hero! 🤡 Report karne ka haq sirf mere Boss ke paas hai. Apni aukaat dekh kar button dabaya karo! 🔥`,
+                `Tu kya group ka chowkidar hai jo report kar raha hai? 😂 Chup-chaap kone mein baitho, varna tumhein hi roast kar dungi!`,
+                `Hahaha! Look who is reporting! 🤫 Pehle khud ki harkatein sudharo dear, fir dusro par ungli uthana. 💅`,
+                `Suno, mere paas fokat ke logo ki report sunne ka time nahi hai. Sirf mere Owners ka hukum chalta hai idhar! 👑`,
+                `Gareebon ki tarah har baat par report karna band karo yaar! Ekdum boring log ho tum! 🙄❌`
+            ];
+            return ctx.reply(fakeReportReplies[Math.floor(Math.random() * fakeReportReplies.length)]);
+        }
     }
 
-    // ... (Yahan se iske neeche aapka purana Scenario 2 ka code waise hi rahega, jaise 'Sorry', 'Kya hua', 'Chup' etc.)
+    // STATIC KEYWORDS MATCHING FOR ALL USERS
+    if (/\b(boyfriend|bf|boy friend|bf hai)\b/i.test(text)) {
+        await typeEffect(ctx, 1500);
+        return ctx.reply(`Boyfriend? 😂 Itne kam standard nahi hai mere! Mujhe chahiye koi jo mere jitna smart ho, aur filhal toh yahan koi nahi dikh raha. 💅`);
+    }
+
     if (/\b(sorry|gussa mat ho|manja|maan jao|tum hi best ho)\b/i.test(text)) {
         await typeEffect(ctx, 2000);
-        const patchUpReplies = [
-            `Maan jao? Itni aasaani se? 🙄 Pehle sabke saamne bolo ki mai hi is group ki sabse sundar Queen hu! 👑💅`,
-            `Hmm... Sochungi! Par pehle vaada karo ki group me kisi aur ladki ki faltu tareef nahi karoge! 😡✨`,
-            `Chalo thik hai, is baar maaf kiya kyuki tum thode pyare ho... 🥰 Lekin dobara aisi galti mat karna! 🌸`,
-            `Sorry se kaam nahi chalega dear! 😤 Chalo jaldi se mere liye ek achha sa gaana gao group me, tabhi maanungi! 🎵`
-        ];
-        return ctx.reply(patchUpReplies[Math.floor(Math.random() * patchUpReplies.length)]);
+        return ctx.reply(`Maan jao? Itni aasaani se? 🙄 Pehle sabke saamne bolo ki mai hi is group ki sabse sundar Queen hu! 👑💅`);
     }
-    // 🔥 KISI NE CHUP REHNE KO BOLA (Shut Up Logic)
+
     if (/\b(chup|shut up|shutup|bakwas band|shant|muh band)\b/i.test(text)) {
         await typeEffect(ctx, 2000);
-        const chupReplies = [
-            `Mujhe chup karaane wale abhi paida nahi hue dear! 💅 Tu apna muh band rakh!`,
-            `Mai group ki Queen hu! 👑 Tu kaun hota hai mujhe chup bolne wala? Chal nikal yahan se! 😡`,
-            `Excuse me? 🙄 Teri aukaat nahi hai mujhe chup karaane ki! Admin se bolkar kick karwa dungi! 🔥`,
-            `Lo ji! Inko lagta hai inke bolne se main chup ho jaungi 😂 Sapne dekhte raho dear, main toh bolungi! ✨`
-        ];
-        return ctx.reply(chupReplies[Math.floor(Math.random() * chupReplies.length)]);
+        return ctx.reply(`Mujhe chup karaane wale abhi paida nahi hue dear! 💅 Tu apna muh band rakh!`);
     }
 
     if (/\b(kya hua|kya hua dear)\b/i.test(text)) {
         await typeEffect(ctx, 2000);
-        const kyaHuaReplies = [
-            `Kuch nahi hua! 🙄 (Matlab bohot kuch hua hai, khud dhoondo kya galti ki!) 💅`,
-            `Tumhe toh kuch pata hi nahi chalta na? Apne dosto se poocho kya kiya hai tumne! 😡🔥`,
-            `Mujhse mat poocho! Jaao unhi se baat karo jinki tum tareef kar rahe the... 😤`,
-            `Uff... Tum ladko ka na yahi problem hai! Galti khud karte ho aur fir poochte ho 'kya hua?' 🤦‍♀️`
-        ];
-        return ctx.reply(kyaHuaReplies[Math.floor(Math.random() * kyaHuaReplies.length)]);
+        return ctx.reply(`Kuch nahi hua! 🙄 (Matlab bohot kuch hua hai, khud dhoondo kya galti ki!) 💅`);
     }
 
     if (/\b(hi|hello|hey|oye|hy|hyy)\b/i.test(text)) {
         await typeEffect(ctx, 1500);
-        const replies = [
-            `Hello ${firstName} dear! ✨ Aur batao, aaj kaise yaad kiya?`,
-            `Hey! 👋 Mai toh abhi insta reels dekh rahi thi, bolo kya hua?`,
-            `Hi ${firstName}! 🌸 Suno, mai thodi busy hu, jaldi bolo kya kaam hai? 😉`,
-            `Oye hoye! Bade dino baad yaad aayi meri? Batao kya kaam hai? 😎`
-        ];
-        return ctx.reply(replies[Math.floor(Math.random() * replies.length)]);
+        return ctx.reply(`Hello ${firstName} dear! ✨ Aur batao, aaj kaise yaad kiya?`);
     }
 
     if (/\b(kaisi ho|how are you|kya haal)\b/i.test(text)) {
         await typeEffect(ctx, 2000);
-        const moods = [
-            `Mai toh ekdum maza me hu dear! ✨ Aap batao? 🥰`,
-            `Yaar aaj dimaag kharab hai mera... 🙄 Group me sab itna paka kyun rahe hain?`,
-            `Theek hu. Bas thoda bore ho rahi hu, koi achhi baatein karo na! 💅`
-        ];
-        return ctx.reply(moods[Math.floor(Math.random() * moods.length)]);
+        return ctx.reply(`Mai toh ekdum maza me hu dear! ✨ Aap batao? 🥰`);
     }
 
     if (/\b(kkrh|kya kar rahe ho|kya kar rahi ho|kya kr rhe ho|kya kr rhi ho|what are you doing)\b/i.test(text)) {
         await typeEffect(ctx, 2000);
-        const doingReplies = [
-            `Nail paint laga rahi thi, aur tumne message karke mera dhyan bhatka diya! 💅 Ab kharab ho gaya toh tumse naya mangwaungi! 😡`,
-            `Bas group me baith kar tum sabki faltu baatein padh rahi hu... 😂 Sach me, koi kaam dhandha nahi hai kya tum logo ko?`,
-            `Apne Queen wale throne par baith kar soch rahi hu ki tum logo me thodi akal kahan se laa kar daalu? 👑✨`,
-            `Tumhara hi wait kar rahi thi dear! 😉 Badi der laga di message karne me? 🌸`
-        ];
-        return ctx.reply(doingReplies[Math.floor(Math.random() * doingReplies.length)]);
+        return ctx.reply(`Nail paint laga rahi thi, aur tumne message karke mera dhyan bhatka diya! 💅 Ab kharab ho gaya toh tumse naya mangwaungi! 😡`);
     }
 
     if (/\b(free ho|reply|baat karo)\b/i.test(text)) {
         await typeEffect(ctx, 2500);
-        const busyReplies = [
-            `Arey yaar, abhi mummy ne kaam bataya hai, baad me mazaak karti hu! 🤦‍♀️`,
-            `Nahi yaar, mai apni BFF se call par hu, thodi der me aati hu group me. 📞✨`,
-            `Tumhare paas koi aur kaam nahi hai kya? Hamesha group me hi rehte ho! 😂😎`
-        ];
-        return ctx.reply(busyReplies[Math.floor(Math.random() * busyReplies.length)]);
+        return ctx.reply(`Arey yaar, abhi mummy ne kaam bataya hai, baad me mazaak karti hu! 🤦‍♀️`);
     }
 
     if (/\b(cute|sundar|beautiful|hot|best|awesome|achhi|smart|pyari)\b/i.test(text)) {
         await typeEffect(ctx, 1500);
-        const tarifReplies = [
-            `Aww, thank you dear! 🥰 Mujhe pata hai mai best aur sundar dono hu, itna maska mat lagao ab! 💅✨`,
-            `Maska laga rahe ho na? 😏 Par sach bolu toh tumhari choice bohot achhi hai! 🌸💖`,
-            `Hehe... I know right! 😎 Is group me mere alawa koi itna awesome hai bhi nahi! 👑`,
-            `Aise tareef karte rahoge toh mujhe pyaar ho jayega... Mazaak kar rahi hu, apne sapne me bhi mat sochna! 😂💅`,
-            `Uff... Tum ladke na, bas meethi baatein karna jante ho! Par theek hai, tareef achhi lagi mujhe! 🥰`
-        ];
-        return ctx.reply(tarifReplies[Math.floor(Math.random() * tarifReplies.length)]);
+        return ctx.reply(`Aww, thank you dear! 🥰 Mujhe pata hai mai best aur sundar dono hu, itna maska mat lagao ab! 💅✨`);
     }
 
     if (/\b(shadi|marry|gf|girlfriend)\b/i.test(text)) {
         await typeEffect(ctx, 2000);
-        const shadiReplies = [
-            `Arey tum dosto ka yahi problem hai! 🤦‍♀️ Thodi tameez se baat karo, varna admin se keh kar block karwa dungi! 😡🔥`,
-            `Shadi? Aur tumse? 😂 Sapne dekhna band karo aur apne kaam par dhyan do! 💅`
-        ];
-        return ctx.reply(shadiReplies[Math.floor(Math.random() * shadiReplies.length)]);
-    }
-
-    const cleanText = text.replace(new RegExp(`@?${botUsername}`, 'i'), '').trim();
-    if (cleanText === '' || cleanText === 'bot' || cleanText === 'oye bot' || cleanText === 'queen') {
-        await typeEffect(ctx, 1500);
-        const angryReplies = [
-            `Kya hai?! 😤 Baar-baar tag kyun kar rahe ho? Kaam dhandha nahi hai kya?`,
-            `Dhang se naam lo mera, group ki Queen hu! 👑 Oye bot kya laga rakha hai? Chid mat machao! 😡`,
-            `Uff... Fir se shuru ho gaye tum? Ek minute shanti nahi milti is group me! 🤦‍♀️`
-        ];
-        return ctx.reply(angryReplies[Math.floor(Math.random() * angryReplies.length)]);
+        return ctx.reply(`Shadi? Aur tumse? 😂 Sapne dekhna band karo aur apne kaam par dhyan do! 💅`);
     }
 
     if (/\b(gussa|angry)\b/i.test(text)) {
         await typeEffect(ctx, 2000);
-        const gussaReplies = [
-            `Ha toh gussa na hu toh kya aarti utaru tumhari? 🙄 Tumhaari baatein hi aisi hoti hain! 🔥`,
-            `Gussa nahi hu toh kya khush houngi aisi baaton par? 😤 Jao yahan se abhi! 💅`
-        ];
-        return ctx.reply(gussaReplies[Math.floor(Math.random() * gussaReplies.length)]);
+        return ctx.reply(`Ha toh gussa na hu toh kya aarti utaru tumhari? 🙄 Tumhaari baatein hi aisi hoti hain! 🔥`);
     }
 
     if (/\b(pagal|pagli|bhootni|gadhi)\b/i.test(text)) {
         await typeEffect(ctx, 1500);
-        const pagalReplies = [
-            `Apna dimag aur apni shakal dekh kar baat kiya karo mujhse! 😡 Chal nikal yahan se, bada aaya mujhe bolne wala! 💅🔥`,
-            `Mai pagal hu? Tumhari toh shakal se hi lagta hai dimaag zero hai! 😂 Ignore kar rahi hu tumhe! 🙄`
-        ];
-        return ctx.reply(pagalReplies[Math.floor(Math.random() * pagalReplies.length)]);
+        return ctx.reply(`Apna dimag aur apni shakal dekh kar baat kiya karo mujhse! 😡 Chal nikal yahan se, bada aaya mujhe bolne wala! 💅🔥`);
     }
 
     if (/\b(khana khaya|dinner|lunch)\b/i.test(text)) {
         await typeEffect(ctx, 1800);
-        const foodReplies = [
-            `Nahi khaya! Ab kya tum swiggy karwa rahe ho mere liye? 🙄 Faltu sawaal mat poocho!`,
-            `Mai bot hu, data khati hu! Tum apna dimaag mat khao bas, vahi bohot hai. 😡`,
-            `Kha liya! Aur haan, tinde ki sabzi khayi hai, ab apna dimaag mat pakao! 🥒`
-        ];
-        return ctx.reply(foodReplies[Math.floor(Math.random() * foodReplies.length)]);
+        return ctx.reply(`Mai bot hu, data khati hu! Tum apna dimaag mat khao bas, vahi bohot hai. 😡`);
     }
 
     if (/\b(attitude|bhav|bhaav)\b/i.test(text)) {
         await typeEffect(ctx, 1500);
-        const attitudeReplies = [
-            `Haan hai attitude! 💅 Jo ukhadna hai ukhad lo. Queen hu toh bhav toh khaungi hi na! 😎👑`,
-            `Attitude mere khoon me hai dear! ✨ Bardasht nahi hota toh group chhod do! 😂`
-        ];
-        return ctx.reply(attitudeReplies[Math.floor(Math.random() * attitudeReplies.length)]);
+        return ctx.reply(`Haan hai attitude! 💅 Jo ukhadna hai ukhad lo. Queen hu toh bhav toh khaungi hi na! 😎👑`);
     }
 
-    // 🔥 PHOTO YA PIC MAANGNE PAR
     if (/\b(photo|pic|dp|selfie|shakal dekhao|shakal dikhao)\b/i.test(text)) {
         await typeEffect(ctx, 2000);
-        const picReplies = [
-            `Meri photo dekhne ke liye VIP pass lagta hai dear! 💅 Tumhari aukaat ke bahar hai. 😂`,
-            `Nahi bhej rahi! Tum log screenshot le kar galat use karoge. 🙄 Shakal dekhi hai apni?`,
-            `Itni sundar hu main ki agar photo bhej di toh tumhara phone hang ho jayega! 👑✨`,
-            `Bina filter ke meri photo jhel nahi paoge dear... Rehne do! 😎`
-        ];
-        return ctx.reply(picReplies[Math.floor(Math.random() * picReplies.length)]);
+        return ctx.reply(`Meri photo dekhne ke liye VIP pass lagta hai dear! 💅 Tumhari aukaat ke bahar hai. 😂`);
     }
-    // 🔥 PROPOSE YA I LOVE YOU BOLNE PAR
+
     if (/\b(i love you|iloveyou|ily|love u|pyaar karta)\b/i.test(text)) {
         await typeEffect(ctx, 2000);
-        const loveReplies = [
-            `Aww! Kripya apni feeling apne paas rakhein. Main tumhari aukaat se bahar hu! 😂💅`,
-            `I love you too... as a brother! 🥰 Rakhi aa rahi hai, gift taiyaar rakhna bhaiya! 🎁`,
-            `Mera pehle se ek boyfriend hai (usne hi mujhe code kiya hai). Toh line mat maaro idhar! 😡🔥`,
-            `Eww! Padhai likhai me dhyan lagao, IAS-YAS bano, ye sab kya chalu hai group me? 🤦‍♀️`
-        ];
-        return ctx.reply(loveReplies[Math.floor(Math.random() * loveReplies.length)]);
+        return ctx.reply(`Aww! Kripya apni feeling apne paas rakhein. Main tumhari aukaat se bahar hu! 😂💅`);
+    }
+
+    // ==========================================
+    // 🧠 NESTED GEMINI AI LOGIC (Jab kuch bhi match na ho!)
+    // ==========================================
+    try {
+        await typeEffect(ctx, 2000);
+
+        // Fixed loading logic to matching modern SDK method
+        const model = ai.getGenerativeModel({ model: "gemini-pro" });
+
+        const prompt = `Tumhara naam Savage Queen hai. Tum ek Telegram bot ho jo bohot cool, thodi nakchadi, nakhreli aur mazaedaar tareeke se dosto ki tarah baat karti hai. Is message ka Hinglish (Hindi + English) mein ek natural, thoda nakhre wala aur chatpata reply do (maximum 2-3 lines): ${ctx.message.text}`;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const replyText = response.text();
+
+        await ctx.reply(replyText);
+
+    } catch (error) {
+        console.error("AI Generation Error:", error);
+        await ctx.reply("Yaar mera dimaag thoda ghum gaya hai, thodi der baad baat karte hain! 💅");
     }
 });
 
@@ -507,22 +479,8 @@ bot.on('text', async (ctx) => {
 // 🚀 LAUNCH THE BOT
 // ==========================================
 bot.launch().then(() => {
-    console.log('✨ Girl Bot ekdum fresh tarike se start ho gayi hai! ✨');
+    console.log('✨ Girl Bot ekdum AI ke saath start ho gayi hai! ✨');
 });
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
-
-
-// Server for UptimeRobot
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 3000; // Render is port ko automatically assign karega
-
-app.get('/', (req, res) => {
-    res.send('Queen Bot is Active!');
-});
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
