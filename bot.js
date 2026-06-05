@@ -463,8 +463,8 @@ bot.on('text', async (ctx) => {
     try {
         await typeEffect(ctx, 2000);
 
-        // ✅ FIXED: Ekdum stable and standard methods use ho raha hai naye SDK ke hisab se
-        const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // 👑 Aur iski jagah ye naye model ka naam daal do:
+        const model = ai.getGenerativeModel({ model: "gemini-pro" });
 
         const prompt = `Tumhara naam Aashu hai. Tum ek Telegram bot ho jo bohot cool, thodi nakchadi, nakhreli aur mazaedaar tareeke se dosto ki tarah baat karti hai. Is message ka Hinglish (Hindi + English) mein ek natural, thoda nakhre wala aur chatpata reply do (maximum 2-3 lines): ${ctx.message.text}`;
 
