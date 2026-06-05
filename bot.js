@@ -285,7 +285,7 @@ bot.on('text', async (ctx) => {
     // ==========================================
     // 👑 OWNER / CREATOR TRACKING LOGIC (Bina Mention ke bhi Chalega)
     // ==========================================
-    if (/\b(owner|creator|admin|maker|banae wala|banya kisne|owner kaha)\b/i.test(text)) {
+    if (/\b(owner|creator|admin|maker|gc owner|group kiska|group kis|owner kaha)\b/i.test(text)) {
         await typeEffect(ctx, 1800);
         const ownerReplies = [
             `Arey! Mere Boss ko dhoondh rahe ho? 😎 Wo abhi kisi bohot important development project mein busy hain, thodi der baad aayenge! 💻✨`,
